@@ -96,7 +96,7 @@ public class MoviesController {
                     searchResults.size(), searchResults.size() == 1 ? "" : "s"));
             }
             
-            logger.info("Search completed successfully! Returning {} results", searchResults.size());
+            logger.info("Shiver me timbers! Search completed successfully! Returning {} results", searchResults.size());
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
