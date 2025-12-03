@@ -3,13 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Movies This Month</title>
+    <title>Free Movies This Month - Pirate's Movie Treasure Chest</title>
     <link rel="stylesheet" th:href="@{/css/movies.css}">
 </head>
 <body>
     <div class="container">
-        <h1>Free Movies This Month</h1>
-        <div class="movies-grid">
+        <h1>🏴‍☠️ Pirate's Movie Treasure Chest 🏴‍☠️</h1>
+        <p class="pirate-greeting">Ahoy matey! Welcome to our treasure chest of free movies this month!</p>
+        
+        <!-- Search Form - Arrr! The treasure hunting form! -->
+        <div class="search-section">
+            <h2>🔍 Hunt for Movie Treasures</h2>
+            <form method="GET" action="/movies" class="search-form">
+                <div class="search-row">
+                    <div class="search-field">
+                        <label for="name">Movie Name:</label>
+                        <input type="text" id="name" name="name" 
+                               th:value="${searchName}" 
+                               placeholder="Enter movie name, ye savvy pirate...">
+                    </div>
+                    <div class="search-field">
+                        <label for="id">Movie ID:</label>
+                        <input type="number" id="id" name="id" 
+                               th:value="${searchId}" 
+                               placeholder="Enter treasure ID..." min="1">
+                    </div>
+                    <div class="search-field">
+                        <label for="genre">Genre:</label>
+                        <select id="genre" name="genre">
+                            <option value="">All Genres</option>
+                            <option th:each="genreOption : ${allGenres}" 
+                                    th:value="${genreOption}" 
+                                    th:text="${genreOption}"
+                                    th:selected="${genreOption == searchGenre}">Genre</option>
+                        </select>
+                    </div>
+                    <div class="search-actions">
+                        <button type="submit" class="search-btn">🔍 Search Treasures</button>
+                        <a href="/movies" class="clear-btn">🧹 Clear Search</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search Results Info -->
+        <div th:if="${searchPerformed}" class="search-results-info">
+            <div th:if="${searchResultsCount > 0}" class="success-message">
+                <p>🎉 Ahoy! Found <strong th:text="${searchResultsCount}">0</strong> movie treasure<span th:text="${searchResultsCount == 1 ? '' : 's'}">s</span> for ye!</p>
+            </div>
+            <div th:if="${searchResultsCount == 0}" class="no-results-message">
+                <p>😔 Arrr! No movie treasures found matching yer search criteria, matey!</p>
+                <p>Try adjusting yer search terms or <a href="/movies">view all treasures</a>.</p>
+            </div>
+        </div>
+
+        <!-- Movies Grid -->
+        <div class="movies-grid" th:if="${movies != null and !movies.empty}">
             <div class="movie-card" th:each="movie : ${movies}">
                 <div class="movie-icon" th:text="${movie.icon}">🎬</div>
                 <h3 th:text="${movie.movieName}">Movie Title</h3>
@@ -28,6 +77,21 @@
                 </div>
                 <a th:href="@{/movies/{id}/details(id=${movie.id})}" class="details-btn">View Details</a>
             </div>
+        </div>
+
+        <!-- Empty state when no movies at all -->
+        <div th:if="${movies == null or movies.empty}" class="empty-state">
+            <div th:unless="${searchPerformed}">
+                <p>🏴‍☠️ Arrr! The treasure chest be empty, matey!</p>
+            </div>
+        </div>
+
+        <!-- API Information -->
+        <div class="api-info">
+            <h3>🔗 API for Fellow Pirates</h3>
+            <p>Ye can also search for movie treasures using our REST API:</p>
+            <code>GET /movies/search?name=treasure&genre=Adventure</code>
+            <p>Returns JSON treasure map with all the movie details!</p>
         </div>
     </div>
 </body>
